@@ -23,7 +23,7 @@ public class Category {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    private CategoryType type;
+    private TransactionType type;
 
     @ManyToOne
     @JoinColumn(name = "parent_id")

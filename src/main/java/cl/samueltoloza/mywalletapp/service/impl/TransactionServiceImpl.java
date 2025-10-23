@@ -34,6 +34,10 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public Transaction createTransactionForUser(Transaction transaction, User user) {
 
+        if (transaction == null) throw new IllegalArgumentException("Transaction must not be null");
+        if (user == null) throw new IllegalArgumentException("User must not be null");
+        if (transaction.getCurrency() == null) throw new IllegalArgumentException("Currency must not be null");
+
         transaction.setUser(user);
 
         Currency currency = transaction.getCurrency();

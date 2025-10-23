@@ -1,6 +1,6 @@
 package cl.samueltoloza.mywalletapp.model;
 
-public enum CategoryType {
+public enum TransactionType {
 
     INCOME,
     EXPENSE

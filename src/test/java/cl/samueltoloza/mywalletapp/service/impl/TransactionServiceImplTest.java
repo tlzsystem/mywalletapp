@@ -16,8 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,6 +76,52 @@ public class TransactionServiceImplTest {
         assertEquals(user, savedTx.getUser());
         assertEquals(new BigDecimal("10.46"), savedTx.getAmount());
         verify(transactionRepository, times(1)).save(any(Transaction.class));
+    }
+
+    @Test
+    void testGetTransactionsForUser_EmptyList() {
+        when(transactionRepository.findByUser(any(User.class))).thenReturn(List.of());
+
+        List<Transaction> result = transactionService.getTransactionsForUser(user);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(transactionRepository, times(1)).findByUser(user);
+    }
+
+    @Test
+    void testCreateTransactionForUser_NullTransaction() {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            transactionService.createTransactionForUser(null, user);
+        });
+
+        assertEquals("Transaction must not be null", exception.getMessage());
+    }
+
+    @Test
+    void testCreateTransactionForUser_NullUser() {
+        Transaction tx = new Transaction();
+        tx.setAmount(BigDecimal.TEN);
+        tx.setCurrency(currency);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            transactionService.createTransactionForUser(tx, null);
+        });
+
+        assertEquals("User must not be null", exception.getMessage());
+    }
+
+    @Test
+    void testCreateTransactionForUser_NullCurrency() {
+        Transaction tx = new Transaction();
+        tx.setAmount(BigDecimal.TEN);
+        tx.setCurrency(null);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            transactionService.createTransactionForUser(tx, user);
+        });
+
+        assertEquals("Currency must not be null", exception.getMessage());
     }
 
 }

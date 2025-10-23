@@ -14,4 +14,6 @@ public interface CategoryService {
 
     Optional<Category> findByIdAndUser(Long id, User user);
 
+    void createDefaultCategoriesForUser(User user);
+
 }
